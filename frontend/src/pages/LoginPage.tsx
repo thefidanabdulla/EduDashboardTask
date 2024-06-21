@@ -29,18 +29,18 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-purple-200 flex items-center justify-center p-4">
+    <div className="w-full min-h-screen bg-indigo-200 flex items-center justify-center p-4">
       <form
         className="max-w-[500px] w-full rounded-3xl bg-white bg-opacity-90 p-10 flex flex-col gap-4"
         onSubmit={handleSubmit}
       >
-        <h1 className="w-full text-center uppercase text-3xl text-gray-300 font-semibold">
+        <h1 className="w-full text-center uppercase text-3xl text-indigo-300 font-semibold">
           Login
         </h1>
         <div className="flex flex-col gap-2">
-          <label className="text-gray-500 text-lg">Username:</label>
+          <label className="text-indigo-500 text-lg">Username:</label>
           <input
-            className="w-full rounded-xl p-4 border border-gray-100 outline-none text-base placeholder:text-gray-300"
+            className="w-full rounded-xl p-4 border border-indigo-100 outline-none text-base placeholder:text-indigo-300"
             placeholder="Enter the username"
             type="text"
             value={username}
@@ -48,9 +48,9 @@ const LoginPage: React.FC = () => {
           />
         </div>
         <div className="flex flex-col gap-2">
-          <label className="text-gray-500 text-lg">Password:</label>
+          <label className="text-indigo-500 text-lg">Password:</label>
           <input
-            className="w-full rounded-xl p-4 border border-gray-100 outline-none text-base placeholder:text-gray-300"
+            className="w-full rounded-xl p-4 border border-indigo-100 outline-none text-base placeholder:text-indigo-300"
             placeholder="Enter the password"
             type="password"
             value={password}
@@ -58,13 +58,13 @@ const LoginPage: React.FC = () => {
           />
         </div>
         <button
-          className="w-full py-4 text-lg rounded-lg outline-none bg-purple-300 text-white font-semibold"
+          className="w-full py-4 text-lg rounded-lg outline-none bg-indigo-300 text-white font-semibold"
           type="submit"
           disabled={isLoading}
         >
           Login
         </button>
-        <p className="font-medium text-sm text-gray-400">
+        <p className="font-medium text-sm text-indigo-400">
           Not Registered?{" "}
           <Link to={"/register"} className="underline ml-1 font-semibold">
             Register
