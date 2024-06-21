@@ -5,7 +5,6 @@ const bcrypt = require('bcryptjs');
 
 const router = express.Router();
 
-// Register a new user
 router.post('/register', async (req, res) => {
     const { username, password } = req.body;
 
@@ -28,7 +27,6 @@ router.post('/register', async (req, res) => {
     }
 });
 
-// Login a user
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
