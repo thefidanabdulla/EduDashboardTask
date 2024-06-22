@@ -6,7 +6,7 @@ import AddSchoolForm from "../components/schools/AddSchoolForm";
 import { useDeleteSchoolMutation, useGetSchoolsQuery } from "../redux/services/school";
 
 import { ImSpinner2 } from "react-icons/im";
-import { FaTrash } from "react-icons/fa";
+import { FaBullseye, FaTrash } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 import { toast } from "react-toastify";
@@ -16,6 +16,8 @@ import UpdateSchoolForm from "../components/schools/UpdateSchoolForm";
 const Schools = () => {
   const [isAddSchoolModalShowing, setIsAddSchoolModalShowing] = useState(false);
   const [isUpdateSchoolModalShowing, setIsUpdateSchoolModalShowing] = useState(false);
+  const [isDeleteModalShowing, setIsDeleteModalShowing] = useState(false);
+  const [deletedSchoolId, setDeletedSchoolId] = useState("");
   const [updatedSchool, setUpdatedSchool] = useState({
     _id:"",
     name: '',
@@ -67,6 +69,20 @@ const Schools = () => {
           <UpdateSchoolForm initialData={updatedSchool} setIsModalShowing={setIsUpdateSchoolModalShowing} />
         </CustomModal>
       )}
+      {isDeleteModalShowing && (
+        <CustomModal
+          title="Delete School"
+          setIsModalShowing={setIsDeleteModalShowing}
+        >
+          <div className="py-10 flex flex-col items-center justify-center gap-8">
+            <h3 className="text-2xl text-gray-500 font-medium">Are you sure?</h3>
+            <button onClick={() =>{
+               handleDeleteSchool(deletedSchoolId)
+               setIsDeleteModalShowing(false)
+              }} className="rounded-xl p-4 text-2xl bg-red-400 transition-all duration-300 hover:bg-red-500 text-white">Delete</button>
+          </div>
+        </CustomModal>
+      )}
       <div className="w-full flex items-center justify-between">
         <h1 className="text-[48px] font-bold text-indigo-400">Schools</h1>
         <button
@@ -103,7 +119,10 @@ const Schools = () => {
                       }} type="button" className="p-2 text-2xl rounded-md bg-indigo-300 transition-all duration-300 hover:bg-indigo-400 text-white">
                         <MdEdit />
                       </button>
-                      <button onClick={() => handleDeleteSchool(school._id)} type="button" className="p-2 text-2xl rounded-md bg-red-400 transition-all duration-300 hover:bg-red-600 text-white">
+                      <button onClick={() => {
+                        setDeletedSchoolId(school._id);
+                        setIsDeleteModalShowing(true)
+                      }} type="button" className="p-2 text-2xl rounded-md bg-red-400 transition-all duration-300 hover:bg-red-600 text-white">
                         <FaTrash />
                       </button>
                     </td>
