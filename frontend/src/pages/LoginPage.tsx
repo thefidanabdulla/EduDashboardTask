@@ -4,20 +4,27 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useForm } from "react-hook-form";
+
+export type LoginFormData = {
+  username: string;
+  password: string;
+};
 
 const LoginPage: React.FC = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>();
+
   const [login, { isLoading }] = useLoginMutation();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (username.length == 0 || password.length == 0) {
-      toast.error("Please fill all fields!!");
-    } else {
+  const onSubmit = handleSubmit(async (data) => {
       try {
-        const { token } = await login({ username, password }).unwrap();
+        const { token } = await login(data).unwrap();
         Cookies.set("token", token);
         toast.success("Login successfully :)");
         navigate("/");
@@ -25,38 +32,45 @@ const LoginPage: React.FC = () => {
         console.error("Failed to login:", error);
         toast.error("Username or Password was wrong!!");
       }
-    }
-  };
+  })
+  
 
   return (
     <div className="w-full min-h-screen bg-indigo-200 flex items-center justify-center p-4">
       <form
         className="max-w-[500px] w-full rounded-3xl bg-white bg-opacity-90 p-10 flex flex-col gap-4"
-        onSubmit={handleSubmit}
+        onSubmit={onSubmit}
       >
         <h1 className="w-full text-center uppercase text-3xl text-indigo-300 font-semibold">
           Login
         </h1>
-        <div className="flex flex-col gap-2">
-          <label className="text-indigo-500 text-lg">Username:</label>
+        <label className="text-gray-400 text-sm font-bold flex-1">
+          UserName
           <input
-            className="w-full rounded-xl p-4 border border-indigo-100 outline-none text-base placeholder:text-indigo-300"
-            placeholder="Enter the username"
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            className="border rounded-md w-full py-3 px-4 font-normal outline-none mt-2 border-indigo-50"
+            {...register("username", { required: "This field is required" })}
           />
-        </div>
-        <div className="flex flex-col gap-2">
-          <label className="text-indigo-500 text-lg">Password:</label>
+          {errors.username && (
+            <span className="text-red-400 text-xs">
+              {errors.username.message}
+            </span>
+          )}
+        </label>
+        <label className="text-gray-400 text-sm font-bold flex-1">
+          Password
           <input
-            className="w-full rounded-xl p-4 border border-indigo-100 outline-none text-base placeholder:text-indigo-300"
-            placeholder="Enter the password"
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            className="border rounded-md w-full py-3 px-4 font-normal outline-none mt-2 border-indigo-50"
+            {...register("password", { required: "This field is required" })}
           />
-        </div>
+          {errors.password && (
+            <span className="text-red-400 text-xs">
+              {errors.password.message}
+            </span>
+          )}
+        </label>
+        
         <button
           className="w-full py-4 text-lg rounded-lg outline-none bg-indigo-300 text-white font-semibold"
           type="submit"

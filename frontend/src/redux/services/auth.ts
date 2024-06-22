@@ -9,8 +9,8 @@ interface AuthRequest {
   password: string;
 }
 
-export const authApi = createApi({
-  reducerPath: 'authApi',
+export const authenticationApi = createApi({
+  reducerPath: 'authenticationApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/api/auth' }),
   endpoints: (builder) => ({
     login: builder.mutation<AuthResponse, AuthRequest>({
@@ -30,4 +30,4 @@ export const authApi = createApi({
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation } = authApi;
+export const { useLoginMutation, useRegisterMutation } = authenticationApi;

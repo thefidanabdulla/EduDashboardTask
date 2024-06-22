@@ -7,6 +7,7 @@ import HomePage from "./pages/HomePage";
 import Schools from "./pages/Schools";
 import HighSchools from "./pages/HighSchools";
 import Universities from "./pages/Universities";
+import Layout from "./layout/Layout";
 
 const App: React.FC = () => {
   return (
@@ -18,7 +19,9 @@ const App: React.FC = () => {
           path="/"
           element={
             <ProtectedRoute>
-              <HomePage />
+              <Layout>
+                <HomePage />
+              </Layout>
             </ProtectedRoute>
           }
         />
@@ -26,7 +29,9 @@ const App: React.FC = () => {
           path="/schools"
           element={
             <ProtectedRoute>
-              <Schools />
+              <Layout>
+                <Schools />
+              </Layout>
             </ProtectedRoute>
           }
         />
@@ -34,7 +39,9 @@ const App: React.FC = () => {
           path="/high-schools"
           element={
             <ProtectedRoute>
-              <HighSchools />
+              <Layout>
+                <HighSchools />
+              </Layout>
             </ProtectedRoute>
           }
         />
@@ -42,7 +49,9 @@ const App: React.FC = () => {
           path="/universities"
           element={
             <ProtectedRoute>
-              <Universities />
+              <Layout>
+                <Universities />
+              </Layout>
             </ProtectedRoute>
           }
         />

@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom";
-import Layout from "../layout/Layout";
 
 const HomePage = () => {
   return (
-    <Layout>
+    <div>
       <h1 className="text-3xl text-center text-gray-600 font-medium uppercase -tracking-tight">
         Welcome to the Home Page
       </h1>
@@ -30,7 +29,7 @@ const HomePage = () => {
           Universities
         </Link>
       </div>
-    </Layout>
+    </div>
   );
 };
 
