@@ -1,24 +1,23 @@
-const express = require('express');
 const mongoose = require('mongoose');
+const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 
-dotenv.config();
+const authMiddleware = require('./middleware/authMiddleware');
+const schoolRoute = require('./routes/schools');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 
-app.use(cors());
+dotenv.config();
 
+app.use(cors());
 app.use(express.json());
 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('MongoDB connected'))
-    .catch(err => console.log(err));
-
-const authRoutes = require('./routes/auth');
 app.use('/api/auth', authRoutes);
+app.use('/api/schools', schoolRoute);
 
-const authMiddleware = require('./middleware/authMiddleware');
+
 app.get('/api/protected', authMiddleware, (req, res) => {
     res.json({ message: 'This is a protected route', userId: req.user });
 });
@@ -26,3 +25,7 @@ app.get('/api/protected', authMiddleware, (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => console.log(err));
