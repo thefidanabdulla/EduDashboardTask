@@ -3,9 +3,10 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 
+const universityRoutes = require('./routes/universities');
+const highschoolRoute = require('./routes/highSchool');
 const authMiddleware = require('./middleware/authMiddleware');
 const schoolRoute = require('./routes/schools');
-const highschoolRoute = require('./routes/highSchool');
 const authRoutes = require('./routes/auth');
 
 const app = express();
@@ -18,7 +19,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/schools', schoolRoute);
 app.use('/api/highschools', highschoolRoute);
-
+app.use('/api/universities', universityRoutes);
 
 app.get('/api/protected', authMiddleware, (req, res) => {
     res.json({ message: 'This is a protected route', userId: req.user });
