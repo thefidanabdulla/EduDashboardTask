@@ -34,7 +34,26 @@ export const schoolsApi = createApi({
         }
       }),
     }),
+    updateSchool: builder.mutation({
+      query: (updatedSchool) => ({
+        url: `/schools/${updatedSchool._id}`,
+        method: 'PUT',
+        body: updatedSchool,
+        headers: {
+          Authorization: `${Cookies.get("token") || ""}`
+        }
+      }),
+    }),
+    deleteSchool: builder.mutation({
+      query: (id: string) => ({
+        url: `/schools/${id}`,
+        method: 'DELETE',
+        headers: {
+          Authorization: `${Cookies.get("token") || ""}`
+        }
+      }),
+    }),
   }),
 });
 
-export const { useCreateSchoolMutation, useGetSchoolsQuery } = schoolsApi;
+export const { useCreateSchoolMutation, useGetSchoolsQuery, useDeleteSchoolMutation, useUpdateSchoolMutation } = schoolsApi;

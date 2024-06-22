@@ -1,21 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import CustomModal from "../components/CustomModal";
 import AddSchoolForm from "../components/schools/AddSchoolForm";
 
-import { useGetSchoolsQuery } from "../redux/services/school";
+import { useDeleteSchoolMutation, useGetSchoolsQuery } from "../redux/services/school";
 
 import { ImSpinner2 } from "react-icons/im";
 import { FaTrash } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
+import { toast } from "react-toastify";
+import UpdateSchoolForm from "../components/schools/UpdateSchoolForm";
 
 
 const Schools = () => {
   const [isAddSchoolModalShowing, setIsAddSchoolModalShowing] = useState(false);
-  const [isUpdateSchoolModalShowing, setIsUpdateSchoolModalShowing] = useState(true)
-  const { data: schools, isLoading, error } = useGetSchoolsQuery();
-  console.log(schools);
+  const [isUpdateSchoolModalShowing, setIsUpdateSchoolModalShowing] = useState(false);
+  const [updatedSchool, setUpdatedSchool] = useState({
+    _id:"",
+    name: '',
+    address: "",
+    principal: "",
+    students: 0
+  });
+
+  const { data: schools, isLoading , refetch: refetchSchools} = useGetSchoolsQuery();
+  const [deleteSchool, { isLoading: deleting, error: deleteError }] = useDeleteSchoolMutation();
+
+  const handleDeleteSchool = async (schoolId: string) => {
+    try {
+      const response = await deleteSchool(schoolId);
+      toast.success('School deleted successfully :)', response.data);
+      refetchSchools();
+    } catch (error) {
+      toast.error('Error deleting school');
+    }
+  };
+
+  useEffect(() => {
+    refetchSchools();
+  }, [isAddSchoolModalShowing, isUpdateSchoolModalShowing])
   if (isLoading) {
     return (
       <div className="w-full flex justify-center pt-10">
@@ -35,6 +59,14 @@ const Schools = () => {
           <AddSchoolForm setIsModalShowing={setIsAddSchoolModalShowing} />
         </CustomModal>
       )}
+      {isUpdateSchoolModalShowing && (
+        <CustomModal
+          title="Update School"
+          setIsModalShowing={setIsUpdateSchoolModalShowing}
+        >
+          <UpdateSchoolForm initialData={updatedSchool} setIsModalShowing={setIsUpdateSchoolModalShowing} />
+        </CustomModal>
+      )}
       <div className="w-full flex items-center justify-between">
         <h1 className="text-[48px] font-bold text-indigo-400">Schools</h1>
         <button
@@ -49,11 +81,13 @@ const Schools = () => {
           <div className="w-full">
             <table className="w-full">
               <thead className="flex w-full">
-                <td className="flex-1 border p-4 border-indigo-100 text-center text-gray-500 font-semibold text-lg">Name</td>
-                <td className="flex-1 border p-4 border-indigo-100 text-center text-gray-500 font-semibold text-lg">Address</td>
-                <td className="flex-1 border p-4 border-indigo-100 text-center text-gray-500 font-semibold text-lg">Principal</td>
-                <td className="flex-1 border p-4 border-indigo-100 text-center text-gray-500 font-semibold text-lg">Students count</td>
-                <td className="flex-1 border p-4 border-indigo-100 text-center text-gray-500 font-semibold text-lg">Actions</td>
+                <tr className="flex w-full">
+                  <td className="flex-1 border p-4 border-indigo-100 text-center text-gray-500 font-semibold text-lg">Name</td>
+                  <td className="flex-1 border p-4 border-indigo-100 text-center text-gray-500 font-semibold text-lg">Address</td>
+                  <td className="flex-1 border p-4 border-indigo-100 text-center text-gray-500 font-semibold text-lg">Principal</td>
+                  <td className="flex-1 border p-4 border-indigo-100 text-center text-gray-500 font-semibold text-lg">Students count</td>
+                  <td className="flex-1 border p-4 border-indigo-100 text-center text-gray-500 font-semibold text-lg">Actions</td>
+                </tr>
               </thead>
               <tbody>
                 {schools.map((school) => (
@@ -63,10 +97,13 @@ const Schools = () => {
                     <td className="flex-1 border p-4 border-indigo-100 flex items-center justify-center text-center text-gray-500 font-medium">{school.principal}</td>
                     <td className="flex-1 border p-4 border-indigo-100 flex items-center justify-center text-center text-gray-500 font-medium">{school.students}</td>
                     <td className="flex-1 border py-1 px-4 border-indigo-100 flex items-center justify-center gap-4">
-                      <button type="button" className="p-2 text-2xl rounded-md bg-indigo-300 transition-all duration-300 hover:bg-indigo-400 text-white">
+                      <button onClick={() => {
+                        setUpdatedSchool(school);
+                        setIsUpdateSchoolModalShowing(true)
+                      }} type="button" className="p-2 text-2xl rounded-md bg-indigo-300 transition-all duration-300 hover:bg-indigo-400 text-white">
                         <MdEdit />
                       </button>
-                      <button type="button" className="p-2 text-2xl rounded-md bg-red-400 transition-all duration-300 hover:bg-red-600 text-white">
+                      <button onClick={() => handleDeleteSchool(school._id)} type="button" className="p-2 text-2xl rounded-md bg-red-400 transition-all duration-300 hover:bg-red-600 text-white">
                         <FaTrash />
                       </button>
                     </td>

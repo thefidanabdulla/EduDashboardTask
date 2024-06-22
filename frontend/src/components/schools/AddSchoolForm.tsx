@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 
 
 export type AddSchoolFormData = {
+  _id: string;
   name: string;
   address: string;
   principal: string;
@@ -27,7 +28,6 @@ const AddSchoolForm = ({ setIsModalShowing }: AddSchoolFormProps) => {
   const onSubmit = handleSubmit(async (data) => {
     try {
       await createSchool(data);
-      console.log(data)
       toast.success("New school added successfully!!");
       setIsModalShowing(false);
     } catch (error) {
