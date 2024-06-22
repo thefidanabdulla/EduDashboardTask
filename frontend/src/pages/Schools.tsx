@@ -41,7 +41,7 @@ const Schools = () => {
 
   useEffect(() => {
     refetchSchools();
-  }, [isAddSchoolModalShowing, isUpdateSchoolModalShowing])
+  }, [isAddSchoolModalShowing, isUpdateSchoolModalShowing, isDeleteModalShowing])
   if (isLoading) {
     return (
       <div className="w-full flex justify-center pt-10">

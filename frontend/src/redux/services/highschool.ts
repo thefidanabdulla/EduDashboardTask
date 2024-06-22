@@ -2,21 +2,22 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import Cookies from 'js-cookie';
 
 
-interface School {
+interface HighSchool {
   name: string;
   address: string;
   principal: string;
   students: number;
+  graduationRate: number;
 }
 
 
-export const schoolsApi = createApi({
-  reducerPath: 'schoolsApi',
+export const highschoolsApi = createApi({
+  reducerPath: 'highschoolsApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/api/' }),
   endpoints: (builder) => ({
-    createSchool: builder.mutation<School, School>({
+    createHighSchool: builder.mutation<HighSchool, HighSchool>({
       query: (credentials) => ({
-        url: 'schools',
+        url: 'highschools',
         method: 'POST',
         body: credentials,
         headers: {
@@ -24,9 +25,9 @@ export const schoolsApi = createApi({
         }
       }),
     }),
-    getSchools: builder.query<[], School>({
+    getHighSchools: builder.query<[], HighSchool>({
       query: (credentials) => ({
-        url: 'schools',
+        url: 'highschools',
         method: 'Get',
         body: credentials,
         headers: {
@@ -34,19 +35,19 @@ export const schoolsApi = createApi({
         }
       }),
     }),
-    updateSchool: builder.mutation({
-      query: (updatedSchool) => ({
-        url: `/schools/${updatedSchool._id}`,
+    updateHighSchool: builder.mutation({
+      query: (updatedHighSchool) => ({
+        url: `/highschools/${updatedHighSchool._id}`,
         method: 'PUT',
-        body: updatedSchool,
+        body: updatedHighSchool,
         headers: {
           Authorization: `${Cookies.get("token") || ""}`
         }
       }),
     }),
-    deleteSchool: builder.mutation({
+    deleteHighSchool: builder.mutation({
       query: (id: string) => ({
-        url: `/schools/${id}`,
+        url: `/highschools/${id}`,
         method: 'DELETE',
         headers: {
           Authorization: `${Cookies.get("token") || ""}`
@@ -56,4 +57,4 @@ export const schoolsApi = createApi({
   }),
 });
 
-export const { useCreateSchoolMutation, useGetSchoolsQuery, useDeleteSchoolMutation, useUpdateSchoolMutation } = schoolsApi;
+export const { useCreateHighSchoolMutation, useGetHighSchoolsQuery, useDeleteHighSchoolMutation, useUpdateHighSchoolMutation } = highschoolsApi;
