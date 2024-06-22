@@ -5,6 +5,7 @@ const cors = require('cors');
 
 const authMiddleware = require('./middleware/authMiddleware');
 const schoolRoute = require('./routes/schools');
+const highschoolRoute = require('./routes/highSchool');
 const authRoutes = require('./routes/auth');
 
 const app = express();
@@ -16,6 +17,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/schools', schoolRoute);
+app.use('/api/highschools', highschoolRoute);
 
 
 app.get('/api/protected', authMiddleware, (req, res) => {
