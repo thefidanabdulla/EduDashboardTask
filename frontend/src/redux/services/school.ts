@@ -24,11 +24,10 @@ export const schoolsApi = createApi({
         }
       }),
     }),
-    getSchools: builder.query<[], School>({
-      query: (credentials) => ({
-        url: 'schools',
+    getSchools: builder.query<School[], {name?: string, address?: string, principal?: string}>({
+      query: ({name = "", address = "", principal = ""}) => ({
+        url: `schools?name=${name}&address=${address}&principal=${principal}`,
         method: 'Get',
-        body: credentials,
         headers: {
           Authorization: `${Cookies.get("token") || ""}`
         }

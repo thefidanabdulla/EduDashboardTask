@@ -11,6 +11,7 @@ import { FaPlus } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 import { toast } from "react-toastify";
 import UpdateSchoolForm from "../components/schools/UpdateSchoolForm";
+import FilterComponent from "../components/FilterComponent";
 
 
 const Schools = () => {
@@ -18,6 +19,17 @@ const Schools = () => {
   const [isUpdateSchoolModalShowing, setIsUpdateSchoolModalShowing] = useState(false);
   const [isDeleteModalShowing, setIsDeleteModalShowing] = useState(false);
   const [deletedSchoolId, setDeletedSchoolId] = useState("");
+  interface filterField {
+    title: string;
+    key: string;
+    values: string[];
+  }
+  const [filterFieldsArray, setFilterFieldsArray] = useState<filterField[]>([]);
+  const [selectedFilterFields, setSelectedFilterFields] = useState({
+    name: "",
+    address: "",
+    principal: ""
+  });
   const [updatedSchool, setUpdatedSchool] = useState({
     _id:"",
     name: '',
@@ -26,8 +38,8 @@ const Schools = () => {
     students: 0
   });
 
-  const { data: schools, isLoading , refetch: refetchSchools} = useGetSchoolsQuery();
-  const [deleteSchool, { isLoading: deleting, error: deleteError }] = useDeleteSchoolMutation();
+  const { data: schools, isLoading , refetch: refetchSchools} = useGetSchoolsQuery(selectedFilterFields);
+  const [deleteSchool] = useDeleteSchoolMutation();
 
   const handleDeleteSchool = async (schoolId: string) => {
     try {
@@ -39,9 +51,40 @@ const Schools = () => {
     }
   };
 
+  const handleSetFilterFieldsArray = () => {
+    if (schools && schools?.length) {
+      let namesArr = {
+        title: "Name",
+        key: "name",
+        values: {},
+      };
+      namesArr.values = schools.map((item) => item.name);
+
+      let addressArr = {
+        title: "Address",
+        key: "address",
+        values: {},
+      };
+      addressArr.values = schools.map((item) => item.address);
+
+      let principalArr = {
+        title: "Principal",
+        key: "principal",
+        values: {},
+      };
+      principalArr.values = schools.map((item) => item.principal);
+
+      setFilterFieldsArray([namesArr, addressArr, principalArr]);
+    }
+  };
+
   useEffect(() => {
     refetchSchools();
-  }, [isAddSchoolModalShowing, isUpdateSchoolModalShowing, isDeleteModalShowing])
+    handleSetFilterFieldsArray();
+  }, [isAddSchoolModalShowing, isUpdateSchoolModalShowing, isDeleteModalShowing, schools]);
+
+  console.log(filterFieldsArray);
+  console.log(selectedFilterFields);
   if (isLoading) {
     return (
       <div className="w-full flex justify-center pt-10">
@@ -83,6 +126,14 @@ const Schools = () => {
           </div>
         </CustomModal>
       )}
+       {
+        filterFieldsArray.length > 0 && (
+          <FilterComponent
+            filterFields={filterFieldsArray}
+            setSelectedFilterFields={setSelectedFilterFields}
+          />
+        )
+      }
       <div className="w-full flex items-center justify-between">
         <h1 className="text-[48px] font-bold text-indigo-400">Schools</h1>
         <button
