@@ -1,12 +1,37 @@
 const School = require("./../models/School")
 
 //get
+// const getSchools = async (req, res) => {
+//   try {
+//     const schools = await School.find({});
+//     res.status(200).json(schools);
+//   } catch (error) {
+//     res.status(500).json({ message: error.message })
+//   }
+// }
+
+// get
 const getSchools = async (req, res) => {
   try {
-    const schools = await School.find({});
+    const { name, address, principal } = req.query;
+    const filter = {};
+
+    if (name) {
+      filter.name = new RegExp(name, 'i'); // case-insensitive match
+    }
+
+    if (address) {
+      filter.address = new RegExp(address, 'i'); // case-insensitive match
+    }
+
+    if (principal) {
+      filter.principal = new RegExp(principal, 'i'); // case-insensitive match
+    }
+
+    const schools = await School.find(filter);
     res.status(200).json(schools);
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    res.status(500).json({ message: error.message });
   }
 }
 

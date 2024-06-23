@@ -1,12 +1,40 @@
 const HighSchool = require("./../models/HighSchool")
 
 //get
+// const getHighSchools = async (req, res) => {
+//   try {
+//     const highschools = await HighSchool.find({});
+//     res.status(200).json(highschools);
+//   } catch (error) {
+//     res.status(500).json({ message: error.message })
+//   }
+// }
+
 const getHighSchools = async (req, res) => {
   try {
-    const highschools = await HighSchool.find({});
+    const { name, address, principal, graduationRate } = req.query;
+    const filter = {};
+
+    if (name) {
+      filter.name = new RegExp(name, 'i'); // case-insensitive match
+    }
+
+    if (address) {
+      filter.address = new RegExp(address, 'i'); // case-insensitive match
+    }
+
+    if (principal) {
+      filter.principal = new RegExp(principal, 'i'); // case-insensitive match
+    }
+
+    if (graduationRate) {
+      filter.graduationRate = graduationRate; // case-insensitive match
+    }
+
+    const highschools = await HighSchool.find(filter);
     res.status(200).json(highschools);
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    res.status(500).json({ message: error.message });
   }
 }
 

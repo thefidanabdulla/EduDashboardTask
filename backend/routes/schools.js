@@ -8,7 +8,7 @@ const { getSchools, getSchool, createSchool, updateSchool, deleteSchool } = requ
 
 //get
 router.get('/', authMiddleware, getSchools);
-router.get('/:id', getSchool);
+router.get('/:id', authMiddleware, getSchool);
 
 //create
 router.post('/', authMiddleware, createSchool);

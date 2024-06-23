@@ -12,15 +12,43 @@ const createUniversity = async (req, res) => {
     }
 }
 
+// const getUniversities = async (req, res) => {
+//     try {
+//         const universities = await University.find();
+//         res.json(universities);
+//     } catch (err) {
+//         console.error(err.message);
+//         res.status(500).send('Server error');
+//     }
+// }
+
 const getUniversities = async (req, res) => {
     try {
-        const universities = await University.find();
-        res.json(universities);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server error');
+      const { name, address, president, email } = req.query;
+      const filter = {};
+  
+      if (name) {
+        filter.name = new RegExp(name, 'i'); // case-insensitive match
+      }
+  
+      if (address) {
+        filter.address = new RegExp(address, 'i'); // case-insensitive match
+      }
+  
+      if (president) {
+        filter.president = new RegExp(president, 'i'); // case-insensitive match
+      }
+  
+      if (email) {
+        filter.email = new RegExp(email, 'i'); // case-insensitive match
+      }
+  
+      const universities = await University.find(filter);
+      res.status(200).json(universities);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
     }
-}
+  }
 
 const getUniversity = async (req, res) => {
     try {
