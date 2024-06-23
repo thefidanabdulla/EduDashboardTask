@@ -95,8 +95,6 @@ const Schools = () => {
     schools,
   ]);
 
-  console.log(filterFieldsArray);
-  console.log(selectedFilterFields);
   if (isLoading) {
     return (
       <div className="w-full flex justify-center pt-10">

@@ -127,8 +127,6 @@ const Universities = () => {
       </div>
     );
   }
-  console.log(filterFieldsArray);
-  console.log(selectedFilterFields);
   return (
     <div>
       {isAddUniversityModalShowing && (

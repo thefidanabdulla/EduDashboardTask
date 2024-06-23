@@ -23,7 +23,6 @@ const FilterComponent = ({ filterFields, setSelectedFilterFields }: FilterCompon
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(selectedValues);
     setSelectedFilterFields(selectedValues);
   };
 
