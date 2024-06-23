@@ -25,11 +25,10 @@ export const highschoolsApi = createApi({
         }
       }),
     }),
-    getHighSchools: builder.query<[], HighSchool>({
-      query: (credentials) => ({
-        url: 'highschools',
+    getHighSchools: builder.query<HighSchool[], {name?: string, address?: string, principal?: string, graduationRate?: number}>({
+      query: ({name = "", address = "", principal = "", graduationRate = ""}) => ({
+        url: `highschools?name=${name}&address=${address}&principal=${principal}&graduationRate=${graduationRate}`,
         method: 'Get',
-        body: credentials,
         headers: {
           Authorization: `${Cookies.get("token") || ""}`
         }

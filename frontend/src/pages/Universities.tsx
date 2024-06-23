@@ -311,7 +311,7 @@ const Universities = () => {
           </div>
         ) : (
           <div className="w-full text-center text-gray-500 font-semibold text-lg">
-            No university added yet...
+            No university found...
           </div>
         )}
       </div>

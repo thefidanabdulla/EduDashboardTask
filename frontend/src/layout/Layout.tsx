@@ -22,9 +22,6 @@ const Layout = ({ children }: LayoutProps) => {
     <div className="w-full h-screen flex overflow-hidden">
       <div className="w-[300px] bg-indigo-300 flex-shrink-0  px-4 flex flex-col py-2 gap-3">
         <Link to={'/'}  className="font-bold text-[36px] rounded-lg text-white bg-black bg-opacity-5 flex items-center justify-center gap-2 py-3"><PiStudentBold/> EduDash</Link>
-        <Link to={'/'} className="px-10 text-xl font-bold text-white uppercase -tracking-tight text-center py-5 transition-all duration-300 hover:bg-white hover:bg-opacity-20 rounded-md">
-          Home
-        </Link>
         <Link to={'/schools'} className="px-10 text-xl font-bold text-white uppercase -tracking-tight text-center py-5 transition-all duration-300 hover:bg-white hover:bg-opacity-20 rounded-md">
           Schools
         </Link>

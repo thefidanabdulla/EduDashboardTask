@@ -11,13 +11,24 @@ import { FaBullseye, FaTrash } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 import { toast } from "react-toastify";
-
+import FilterComponent from "../components/FilterComponent";
 
 const HighSchools = () => {
   const [isAddHighSchoolModalShowing, setIsAddHighSchoolModalShowing] = useState(false);
   const [isUpdateHighSchoolModalShowing, setIsUpdateHighSchoolModalShowing] = useState(false);
   const [isDeleteModalShowing, setIsDeleteModalShowing] = useState(false);
   const [deletedHighSchoolId, setDeletedHighSchoolId] = useState("");
+  interface filterField {
+    title: string;
+    key: string;
+    values: string[];
+  }
+  const [filterFieldsArray, setFilterFieldsArray] = useState<filterField[]>([]);
+  const [selectedFilterFields, setSelectedFilterFields] = useState({
+    name: "",
+    address: "",
+    principal: ""
+  });
   const [updatedHighSchool, setUpdatedHighSchool] = useState({
     _id:"",
     name: '',
@@ -27,8 +38,8 @@ const HighSchools = () => {
     students: 0
   });
 
-  const { data: highschools, isLoading , refetch: refetchHighSchools} = useGetHighSchoolsQuery();
-  const [deleteHighSchool, { isLoading: deleting, error: deleteError }] = useDeleteHighSchoolMutation();
+  const { data: highschools, isLoading , refetch: refetchHighSchools} = useGetHighSchoolsQuery(selectedFilterFields);
+  const [deleteHighSchool] = useDeleteHighSchoolMutation();
 
   const handleDeleteHighSchool = async (highschoolId: string) => {
     try {
@@ -40,9 +51,44 @@ const HighSchools = () => {
     }
   };
 
+  const handleSetFilterFieldsArray = () => {
+    if (highschools && highschools?.length) {
+      let namesArr = {
+        title: "Name",
+        key: "name",
+        values: {},
+      };
+      namesArr.values = highschools.map((item) => item.name);
+
+      let addressArr = {
+        title: "Address",
+        key: "address",
+        values: {},
+      };
+      addressArr.values = highschools.map((item) => item.address);
+
+      let principalArr = {
+        title: "Principal",
+        key: "principal",
+        values: {},
+      };
+      principalArr.values = highschools.map((item) => item.principal);
+
+      let graduationRateArr = {
+        title: "Graduation Rate",
+        key: "graduationRate",
+        values: {},
+      };
+      graduationRateArr.values = highschools.map((item) => item.graduationRate);
+
+      setFilterFieldsArray([namesArr, addressArr, principalArr, graduationRateArr]);
+    }
+  };
+
   useEffect(() => {
     refetchHighSchools();
-  }, [isAddHighSchoolModalShowing, isUpdateHighSchoolModalShowing, isDeleteModalShowing])
+    handleSetFilterFieldsArray();
+  }, [isAddHighSchoolModalShowing, isUpdateHighSchoolModalShowing, isDeleteModalShowing, highschools])
   if (isLoading) {
     return (
       <div className="w-full flex justify-center pt-10">
@@ -84,6 +130,14 @@ const HighSchools = () => {
           </div>
         </CustomModal>
       )}
+      {
+        filterFieldsArray.length > 0 && (
+          <FilterComponent
+            filterFields={filterFieldsArray}
+            setSelectedFilterFields={setSelectedFilterFields}
+          />
+        )
+      }
       <div className="w-full flex items-center justify-between">
         <h1 className="text-[48px] font-bold text-indigo-400">HighSchools</h1>
         <button
@@ -136,7 +190,7 @@ const HighSchools = () => {
           </div>
         ) : (
           <div className="w-full text-center text-gray-500 font-semibold text-lg">
-            No high school added yet...
+            No high school found...
           </div>
         )}
       </div>
