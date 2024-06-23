@@ -30,9 +30,9 @@ export const universitiesApi = createApi({
         }
       }),
     }),
-    getUniversities: builder.query<University[], void>({
-      query: () => ({
-        url: 'universities',
+    getUniversities: builder.query<University[], {name?: string, address?: string, president?: string, email?: string}>({
+      query: ({name = "", address = "", president = "", email = ""}) => ({
+        url: `universities?name=${name}&address=${address}&president=${president}&email=${email}`,
         method: 'GET',
         headers: {
           Authorization: `${Cookies.get("token") || ""}`

@@ -1,59 +1,67 @@
-// src/components/FilterComponent.tsx
-import React, { useState, ChangeEvent, FC } from 'react';
+import React, { useState } from 'react';
 
-type FilterField = {
-  name: string;
-  label: string;
-  type: 'text' | 'number' | 'select';
-  options?: string[];
-};
-
-interface FilterComponentProps {
-  fields: FilterField[];
-  onFilterChange: (filters: { [key: string]: any }) => void;
+interface FilterField {
+  title: string;
+  key: string;
+  values: string[];
 }
 
-const FilterComponent: FC<FilterComponentProps> = ({ fields, onFilterChange }) => {
-  const [filters, setFilters] = useState<{ [key: string]: any }>({});
+interface FilterComponentProps {
+  filterFields: FilterField[];
+  setSelectedFilterFields : React.Dispatch<React.SetStateAction<any>>
+}
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    const newFilters = { ...filters, [name]: value };
-    setFilters(newFilters);
-    onFilterChange(newFilters);
+const FilterComponent = ({ filterFields, setSelectedFilterFields }: FilterComponentProps) => {
+  const [selectedValues, setSelectedValues] = useState<{ [key: string]: string }>({});
+
+  const handleSelectChange = (key: string, value: string) => {
+    setSelectedValues((prevSelectedValues) => ({
+      ...prevSelectedValues,
+      [key]: value,
+    }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log(selectedValues);
+    setSelectedFilterFields(selectedValues);
+  };
+
+  const handleReset = () => {
+    const resetValues: { [key: string]: string } = {};
+    filterFields.forEach((field) => {
+      resetValues[field.key] = '';
+    });
+    setSelectedValues(resetValues);
+    setSelectedFilterFields(resetValues);
   };
 
   return (
-    <div>
-      {fields.map(field => (
-        <div key={field.name}>
-          <label>{field.label}</label>
-          {field.type === 'text' && (
-            <input
-              type="text"
-              name={field.name}
-              value={filters[field.name] || ''}
-              onChange={handleChange}
-            />
-          )}
-          {field.type === 'number' && (
-            <input
-              type="number"
-              name={field.name}
-              value={filters[field.name] || ''}
-              onChange={handleChange}
-            />
-          )}
-          {field.type === 'select' && (
-            <select name={field.name} value={filters[field.name] || ''} onChange={handleChange}>
-              {field.options && field.options.map(option => (
-                <option key={option} value={option}>{option}</option>
-              ))}
-            </select>
-          )}
+    <form onSubmit={handleSubmit} className='py-10 w-full flex gap-4'>
+      {filterFields.map((field) => (
+        <div key={field.key} className='p-2 rounded-xl border'>
+          <select
+            name={field.key}
+            value={selectedValues[field.key] || ''}
+            onChange={(e) => handleSelectChange(field.key, e.target.value)}
+            className='outline-none'
+          >
+            <option value=''>Select {field.title}</option>
+            {field.values.map((val) => (
+              <option key={val} value={val}>
+                {val}
+              </option>
+            ))}
+          </select>
         </div>
       ))}
-    </div>
+      <button type='submit' className='p-3 border rounded-xl text-white bg-indigo-300 font-bold'>
+        Search
+      </button>
+      <button type='button' onClick={handleReset} className='p-3 border rounded-xl text-white bg-indigo-300 font-bold'>
+        Reset
+      </button>
+    </form>
   );
 };
 
